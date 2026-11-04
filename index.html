@@ -380,6 +380,83 @@
       border-top: 1px solid var(--border);
     }
 
+    .lb-intro {
+      color: var(--text);
+      font-size: 16px;
+    }
+
+    .lb-note {
+      background: var(--soft-blue);
+      border: 1px solid #d7e6ff;
+      border-radius: 14px;
+      padding: 14px 16px;
+      color: #3d4d66;
+      font-size: 14px;
+      margin: 16px 0 8px;
+    }
+
+    .lb-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14.5px;
+      color: #172033;
+    }
+
+    .lb-table thead {
+      border-top: 2px solid #2b3442;
+      border-bottom: 1px solid #b8c0cc;
+    }
+
+    .lb-table tbody {
+      border-bottom: 2px solid #2b3442;
+    }
+
+    .lb-table th,
+    .lb-table td {
+      padding: 13px 10px;
+      text-align: center;
+      white-space: nowrap;
+    }
+
+    .lb-table th {
+      font-size: 12px;
+      letter-spacing: 0.04em;
+      color: var(--primary);
+    }
+
+    .lb-table td.model,
+    .lb-table th.model,
+    .lb-table td.scaffold,
+    .lb-table th.scaffold {
+      text-align: left;
+    }
+
+    .lb-table td.model {
+      font-weight: 750;
+    }
+
+    .lb-table tbody tr:hover {
+      background: #f8fbff;
+    }
+
+    .rank {
+      font-weight: 800;
+    }
+
+    .rank-1 { color: #b8860b; }
+    .rank-2 { color: #6b7280; }
+    .rank-3 { color: #a15c38; }
+
+    .lb-table td.best {
+      font-weight: 800;
+      color: var(--secondary);
+    }
+
+    .org {
+      color: var(--muted);
+      font-weight: 600;
+    }
+
     @media (max-width: 860px) {
       .header-inner {
         flex-direction: column;
@@ -415,9 +492,11 @@
       }
 
       .task-table th,
-      .task-table td {
-        padding: 12px 14px;
-        font-size: 14px;
+      .task-table td,
+      .lb-table th,
+      .lb-table td {
+        padding: 12px 10px;
+        font-size: 13px;
       }
 
       .result-main {
@@ -438,17 +517,17 @@
         <a href="#tasks">Tasks</a>
         <a href="#comparison">Comparison</a>
         <a href="#evaluation">Evaluation</a>
-        <a href="#results">Results</a>
+        <a href="#leaderboard">Leaderboard</a>
       </nav>
     </div>
   </header>
 
   <main class="wrapper">
     <section class="hero" id="overview">
-      <div class="badge">Time-Anchored Benchmark for Chinese Buy-Side Research</div>
+      <div class="badge">Point-in-Time Benchmark for LLM Agents in Investment Research</div>
 
       <h1>
-        BuySideFlow: A Time-Anchored Benchmark for Query-and-Analysis Agents in Chinese Buy-Side Investment Research
+        BuySideFlow: A Point-in-Time Benchmark for LLM Agents in Investment Research
       </h1>
 
       <p class="subtitle">
@@ -477,7 +556,7 @@
       <h2>Abstract</h2>
 
       <p class="abstract-text">
-        Buy-side investment research is not just “write SQL and run it.” A workflow can execute successfully and still be wrong: it may pull a filing that was not yet public at the research date, rely on a classification revised after the fact, or apply today's security list to a date when it looked different. We introduce BuySideFlow, a time-anchored benchmark for executable SQL and SQL–Python agents in Chinese buy-side research. It contains 404 tasks over stock, fund, bond, and macro analysis, run against a fixed snapshot of a licensed 108-table financial database covering daily quotes, financial statements, fund holdings, bond valuations, index constituents, credit ratings, and macro indicators. 312 tasks are SQL-centered; the remaining 92 require Python for downstream computation or artifact generation. Submissions are executed under strict output contracts, with static guards blocking runtime date functions and diagnostic flags surfacing point-in-time risks. Each run is hashed end-to-end against a fixed database snapshot. Across five controlled production-oriented LLM runs, the strongest model solves 55 of 404 tasks; on the Python-mediated subset, the best runs reach only 8 of 92. Most failures are not crashes — they are workflows that run, return an artifact, and disagree with the reference, most often after missing a classification vintage or a disclosure-date guard. Reliable temporal correctness is therefore still out of reach for current SQL and SQL–Python agents.
+        Buy-side investment research is not just “write SQL and run it.” A workflow can execute successfully and still be wrong: it may pull a filing that was not yet public at the research date, rely on a classification revised after the fact, or apply today's security list to a date when it looked different. BuySideFlow is a benchmark of 408 practitioner-derived tasks spanning equities, funds, fixed income, and macroeconomics. Every task runs against the same fixed sample snapshot of a licensed financial database, with 110 tables and 4,547 columns. Reference workflows comprise 254 SQL-native tasks and 154 SQL–Python tasks. Nine agent configurations are evaluated on all 408 tasks. Full-match result accuracy ranges from 16.2% to 36.8%. Among 380 audited submissions that pass the result check, 193 (50.8%) still contain confirmed point-in-time violations, so output agreement alone does not establish temporal validity.
       </p>
     </section>
 
@@ -486,22 +565,22 @@
 
       <div class="stats">
         <div class="stat-card">
-          <div class="number">404</div>
+          <div class="number">408</div>
           <div class="label">Tasks</div>
         </div>
 
         <div class="stat-card">
-          <div class="number">108</div>
+          <div class="number">110</div>
           <div class="label">Database Tables</div>
         </div>
 
         <div class="stat-card">
-          <div class="number">312</div>
-          <div class="label">SQL-centered Tasks</div>
+          <div class="number">254</div>
+          <div class="label">SQL-native Tasks</div>
         </div>
 
         <div class="stat-card">
-          <div class="number">92</div>
+          <div class="number">154</div>
           <div class="label">SQL–Python Tasks</div>
         </div>
       </div>
@@ -543,9 +622,9 @@
           <thead>
             <tr>
               <th>Domain</th>
-              <th>Stock</th>
+              <th>Equity</th>
               <th>Fund</th>
-              <th>Bond</th>
+              <th>Fixed income</th>
               <th>Macro</th>
               <th>Total</th>
             </tr>
@@ -555,17 +634,17 @@
             <tr>
               <td>Tasks</td>
               <td>166</td>
-              <td>122</td>
-              <td>94</td>
-              <td>22</td>
-              <td>404</td>
+              <td>125</td>
+              <td>93</td>
+              <td>24</td>
+              <td>408</td>
             </tr>
           </tbody>
         </table>
       </div>
 
       <p class="caption">
-        Table 1: Domain distribution of BuySideFlow. Macro tasks are included as a smaller exploratory slice in the current version.
+        Domain counts from the paper. Reference workflows split into 254 SQL-native tasks and 154 SQL–Python tasks.
       </p>
     </section>
 
@@ -619,32 +698,180 @@
       </div>
     </section>
 
-    <section class="card" id="results">
+    <section class="card" id="leaderboard">
       <div class="section-title-row">
-        <h2>Baseline Results</h2>
+        <h2>Leaderboard</h2>
       </div>
 
-      <p>
-        Initial controlled production-oriented LLM runs show that reliable temporal correctness
-        remains difficult for current SQL and SQL–Python agents.
+      <p class="lb-intro">
+        Full-match result accuracy on all 408 tasks. Each row is one paper baseline:
+        the agent scaffold paired with the model. Score is the fraction of tasks whose
+        executed artifact matches the reference. Click a row’s score breakdown in the
+        columns to the right for asset domain and reference-workflow accuracy.
       </p>
 
       <div class="result-panel">
         <div class="result-card">
-          <div class="result-main">55 / 404</div>
-          <div class="result-sub">Best Overall Run</div>
+          <div class="result-main">36.8%</div>
+          <div class="result-sub">Top overall · Codex + GPT-5.5</div>
         </div>
-
         <div class="result-card">
-          <div class="result-main">47 / 312</div>
-          <div class="result-sub">Best SQL-centered Run</div>
+          <div class="result-main">42.1%</div>
+          <div class="result-sub">Best SQL-native · Codex + GPT-5.5</div>
         </div>
-
         <div class="result-card">
-          <div class="result-main">8 / 92</div>
-          <div class="result-sub">Best SQL–Python Run</div>
+          <div class="result-main">29.9%</div>
+          <div class="result-sub">Best SQL–Python · SWE-agent + GPT-5.5</div>
         </div>
       </div>
+
+      <p class="lb-note">
+        Ranked by overall accuracy. Highlighted cells are column maxima, including the tie at 79.2% on macro.
+        These nine rows are the paper baselines, not external submissions.
+      </p>
+
+      <div class="task-table-wrap">
+        <table class="lb-table">
+          <thead>
+            <tr>
+              <th>Rank</th>
+              <th class="model">Model</th>
+              <th class="scaffold">Scaffold</th>
+              <th>Overall</th>
+              <th>Equity</th>
+              <th>Fund</th>
+              <th>Fixed income</th>
+              <th>Macro</th>
+              <th>SQL-native</th>
+              <th>SQL–Python</th>
+              <th>Org</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="rank rank-1">1</td>
+              <td class="model">GPT-5.5</td>
+              <td class="scaffold">Codex</td>
+              <td class="best">36.8</td>
+              <td>30.7</td>
+              <td class="best">40.8</td>
+              <td class="best">33.3</td>
+              <td>70.8</td>
+              <td class="best">42.1</td>
+              <td>27.9</td>
+              <td class="org">OpenAI</td>
+            </tr>
+            <tr>
+              <td class="rank rank-2">2</td>
+              <td class="model">GPT-5.5</td>
+              <td class="scaffold">SWE-agent</td>
+              <td>35.0</td>
+              <td class="best">34.9</td>
+              <td>32.0</td>
+              <td>29.0</td>
+              <td>75.0</td>
+              <td>38.2</td>
+              <td class="best">29.9</td>
+              <td class="org">OpenAI</td>
+            </tr>
+            <tr>
+              <td class="rank rank-3">3</td>
+              <td class="model">DeepSeek-V4-Flash</td>
+              <td class="scaffold">SWE-agent</td>
+              <td>30.9</td>
+              <td>25.3</td>
+              <td>30.4</td>
+              <td>29.0</td>
+              <td class="best">79.2</td>
+              <td>33.1</td>
+              <td>27.3</td>
+              <td class="org">DeepSeek</td>
+            </tr>
+            <tr>
+              <td class="rank">4</td>
+              <td class="model">Claude-Opus-4.7</td>
+              <td class="scaffold">SWE-agent</td>
+              <td>29.9</td>
+              <td>28.3</td>
+              <td>23.2</td>
+              <td>31.2</td>
+              <td>70.8</td>
+              <td>32.7</td>
+              <td>25.3</td>
+              <td class="org">Anthropic</td>
+            </tr>
+            <tr>
+              <td class="rank">5</td>
+              <td class="model">GPT-5.5</td>
+              <td class="scaffold">Spider-Agent-Lite</td>
+              <td>28.7</td>
+              <td>27.1</td>
+              <td>26.4</td>
+              <td>21.5</td>
+              <td class="best">79.2</td>
+              <td>31.9</td>
+              <td>23.4</td>
+              <td class="org">OpenAI</td>
+            </tr>
+            <tr>
+              <td class="rank">6</td>
+              <td class="model">Claude-Opus-4.7</td>
+              <td class="scaffold">Claude Code</td>
+              <td>24.0</td>
+              <td>22.3</td>
+              <td>18.4</td>
+              <td>23.7</td>
+              <td>66.7</td>
+              <td>25.2</td>
+              <td>22.1</td>
+              <td class="org">Anthropic</td>
+            </tr>
+            <tr>
+              <td class="rank">7</td>
+              <td class="model">DeepSeek-V4-Flash</td>
+              <td class="scaffold">Spider-Agent-Lite</td>
+              <td>22.3</td>
+              <td>19.9</td>
+              <td>14.4</td>
+              <td>24.7</td>
+              <td>70.8</td>
+              <td>23.2</td>
+              <td>20.8</td>
+              <td class="org">DeepSeek</td>
+            </tr>
+            <tr>
+              <td class="rank">8</td>
+              <td class="model">GLM-5.1</td>
+              <td class="scaffold">SWE-agent</td>
+              <td>19.6</td>
+              <td>16.9</td>
+              <td>12.0</td>
+              <td>23.7</td>
+              <td>62.5</td>
+              <td>24.4</td>
+              <td>11.7</td>
+              <td class="org">Zhipu AI</td>
+            </tr>
+            <tr>
+              <td class="rank">9</td>
+              <td class="model">Qwen3.6-Plus</td>
+              <td class="scaffold">SWE-agent</td>
+              <td>16.2</td>
+              <td>13.9</td>
+              <td>13.6</td>
+              <td>17.2</td>
+              <td>41.7</td>
+              <td>19.7</td>
+              <td>10.4</td>
+              <td class="org">Alibaba</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p class="caption">
+        Result accuracy (%) overall, by asset domain (166 / 125 / 93 / 24), and by reference workflow (254 / 154). Overall pools all 408 tasks.
+      </p>
     </section>
   </main>
 
