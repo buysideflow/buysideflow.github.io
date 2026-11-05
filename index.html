@@ -721,23 +721,14 @@
       </div>
 
       <p class="lb-intro">
-        Full-match result accuracy on all 408 tasks. Overall is the percentage of tasks
-        whose executed artifact matches the reference. The other columns split that
-        accuracy by asset domain and by reference workflow.
+        Full-match result accuracy on all 408 tasks. Score is the percentage of tasks
+        whose executed artifact matches the reference.
       </p>
 
       <div class="result-panel">
         <div class="result-card">
           <div class="result-main" id="lb-top-overall">—</div>
-          <div class="result-sub" id="lb-top-overall-label">Top overall</div>
-        </div>
-        <div class="result-card">
-          <div class="result-main" id="lb-top-sql">—</div>
-          <div class="result-sub" id="lb-top-sql-label">Best SQL-native</div>
-        </div>
-        <div class="result-card">
-          <div class="result-main" id="lb-top-python">—</div>
-          <div class="result-sub" id="lb-top-python-label">Best SQL–Python</div>
+          <div class="result-sub" id="lb-top-overall-label">Top score</div>
         </div>
       </div>
 
@@ -748,7 +739,7 @@
       </div>
 
       <p class="caption">
-        Result accuracy (%) overall, by asset domain (166 / 125 / 93 / 24), and by reference workflow (254 / 154). Overall pools all 408 tasks.
+        Result accuracy (%) on all 408 tasks.
       </p>
     </section>
   </main>
@@ -756,18 +747,8 @@
   <footer class="footer"></footer>
 
   <script>
-    const LB_METRICS = [
-      ["overall", "Overall"],
-      ["equity", "Equity"],
-      ["fund", "Fund"],
-      ["fixed_income", "Fixed income"],
-      ["macro", "Macro"],
-      ["sql_native", "SQL-native"],
-      ["sql_python", "SQL–Python"]
-    ];
-
     let lbEntries = [];
-    let lbSortKey = "overall";
+    let lbSortKey = "score";
     let lbSortDir = -1;
 
     function lbNumber(value) {
@@ -780,23 +761,25 @@
       return Number(value).toFixed(1);
     }
 
-    function lbMaxima(rows) {
-      const max = {};
-      LB_METRICS.forEach(([key]) => {
-        const values = rows.map((row) => lbNumber(row[key])).filter((value) => value !== null);
-        max[key] = values.length ? Math.max(...values) : null;
-      });
-      return max;
+    function lbScore(row) {
+      return lbNumber(row.score != null && row.score !== "" ? row.score : row.overall);
+    }
+
+    function lbField(row, key) {
+      if (key === "score") return lbScore(row);
+      if (key === "date") return row.date || null;
+      if (key === "status") return row.status || null;
+      return row[key] || null;
     }
 
     function lbIsMetric(key) {
-      return LB_METRICS.some(([metric]) => metric === key);
+      return key === "score";
     }
 
     function lbSorted(rows) {
       return rows.slice().sort((a, b) => {
-        const left = lbIsMetric(lbSortKey) ? lbNumber(a[lbSortKey]) : a[lbSortKey];
-        const right = lbIsMetric(lbSortKey) ? lbNumber(b[lbSortKey]) : b[lbSortKey];
+        const left = lbField(a, lbSortKey);
+        const right = lbField(b, lbSortKey);
         if (left === null && right === null) return String(a.model).localeCompare(String(b.model));
         if (left === null) return 1;
         if (right === null) return -1;
@@ -815,27 +798,17 @@
       return cell;
     }
 
-    function lbBestRow(rows, key) {
-      return rows.slice().sort((a, b) => Number(b[key]) - Number(a[key]) || String(a.model).localeCompare(String(b.model)))[0];
-    }
-
     function lbFillSummary(rows) {
-      const overall = lbBestRow(rows, "overall");
-      const sql = lbBestRow(rows, "sql_native");
-      const python = lbBestRow(rows, "sql_python");
-      document.getElementById("lb-top-overall").textContent = lbFormat(overall.overall) + "%";
-      document.getElementById("lb-top-overall-label").textContent = "Top overall · " + overall.scaffold + " + " + overall.model;
-      document.getElementById("lb-top-sql").textContent = lbFormat(sql.sql_native) + "%";
-      document.getElementById("lb-top-sql-label").textContent = "Best SQL-native · " + sql.scaffold + " + " + sql.model;
-      document.getElementById("lb-top-python").textContent = lbFormat(python.sql_python) + "%";
-      document.getElementById("lb-top-python-label").textContent = "Best SQL–Python · " + python.scaffold + " + " + python.model;
+      const top = rows.slice().sort((a, b) => lbScore(b) - lbScore(a) || String(a.model).localeCompare(String(b.model)))[0];
+      document.getElementById("lb-top-overall").textContent = lbFormat(lbScore(top)) + "%";
+      document.getElementById("lb-top-overall-label").textContent = "Top score · " + top.scaffold + " + " + top.model;
     }
 
     function lbRender() {
       const board = document.getElementById("leaderboard-board");
       const rows = lbSorted(lbEntries);
-      const max = lbMaxima(lbEntries);
-      const overallOrder = lbEntries.slice().sort((a, b) => Number(b.overall) - Number(a.overall) || String(a.model).localeCompare(String(b.model)));
+      const bestScore = Math.max(...lbEntries.map(lbScore).filter((value) => value !== null));
+      const overallOrder = lbEntries.slice().sort((a, b) => lbScore(b) - lbScore(a) || String(a.model).localeCompare(String(b.model)));
       const overallRank = new Map(overallOrder.map((row, index) => [row, index + 1]));
 
       const table = document.createElement("table");
@@ -844,15 +817,9 @@
       const headRow = document.createElement("tr");
       headRow.appendChild(lbCell("th", "", "Rank"));
 
-      [["model", "Model", "model"], ["scaffold", "Scaffold", "scaffold"]].forEach(([key, label, className]) => {
+      [["model", "Model", "model"], ["scaffold", "Scaffold", "scaffold"], ["status", "Status", ""], ["score", "Score", ""], ["date", "Date", ""]].forEach(([key, label, className]) => {
         const th = document.createElement("th");
-        th.className = className;
-        th.appendChild(lbSortButton(key, label));
-        headRow.appendChild(th);
-      });
-
-      LB_METRICS.forEach(([key, label]) => {
-        const th = document.createElement("th");
+        if (className) th.className = className;
         th.appendChild(lbSortButton(key, label));
         headRow.appendChild(th);
       });
@@ -866,11 +833,10 @@
         tr.appendChild(lbCell("td", "rank" + (rank <= 3 ? " rank-" + rank : ""), String(rank)));
         tr.appendChild(lbCell("td", "model", row.model));
         tr.appendChild(lbCell("td", "scaffold", row.scaffold));
-        LB_METRICS.forEach(([key]) => {
-          const value = lbNumber(row[key]);
-          const isBest = value !== null && value === max[key];
-          tr.appendChild(lbCell("td", isBest ? "best" : "", value === null ? "—" : lbFormat(value)));
-        });
+        tr.appendChild(lbCell("td", "", row.status || "Paper"));
+        const score = lbScore(row);
+        tr.appendChild(lbCell("td", score !== null && score === bestScore ? "best" : "", score === null ? "—" : lbFormat(score)));
+        tr.appendChild(lbCell("td", "", row.date || "—"));
         const org = document.createElement("td");
         org.className = "org";
         if (row.url) {

@@ -8,16 +8,12 @@ The leaderboard is rendered from [`data/leaderboard.json`](data/leaderboard.json
 {
   "model": "Model name",
   "scaffold": "Agent scaffold",
-  "organization": "Organization",
-  "url": "https://example.com",
+  "status": "Submitted",
   "overall": 0.0,
-  "equity": 0.0,
-  "fund": 0.0,
-  "fixed_income": 0.0,
-  "macro": 0.0,
-  "sql_native": 0.0,
-  "sql_python": 0.0
+  "date": "2026-11-05",
+  "organization": "Organization",
+  "url": "https://example.com"
 }
 ```
 
-Scores are percentages on all 408 tasks. `url` is optional and turns the organization name into a link.
+`overall` is the score shown in the table, as a percentage on all 408 tasks. `date` and `url` are optional. `url` turns the organization name into a link.
