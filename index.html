@@ -385,13 +385,6 @@
       font-size: 16px;
     }
 
-    .submit-title {
-      margin-top: 28px;
-      margin-bottom: 10px;
-      color: var(--primary);
-      font-size: 20px;
-    }
-
     .lb-table {
       width: 100%;
       border-collapse: collapse;
@@ -730,8 +723,7 @@
       <p class="lb-intro">
         Full-match result accuracy on all 408 tasks. Overall is the percentage of tasks
         whose executed artifact matches the reference. The other columns split that
-        accuracy by asset domain and by reference workflow. New results are added by
-        appending an entry to the leaderboard file; the page ranks them automatically.
+        accuracy by asset domain and by reference workflow.
       </p>
 
       <div class="result-panel">
@@ -757,21 +749,6 @@
 
       <p class="caption">
         Result accuracy (%) overall, by asset domain (166 / 125 / 93 / 24), and by reference workflow (254 / 154). Overall pools all 408 tasks.
-      </p>
-
-      <h3 class="submit-title">Submit a result</h3>
-      <p>
-        Open a pull request on
-        <a href="https://github.com/buysideflow/buysideflow.github.io" target="_blank" rel="noopener noreferrer">buysideflow/buysideflow.github.io</a>
-        that appends one object to <code>data/leaderboard.json</code>. Do not set <code>rank</code>.
-        The page sorts by <code>overall</code> and recomputes the order.
-      </p>
-      <p>
-        Include <code>model</code>, <code>scaffold</code>, <code>organization</code>, and the seven scores
-        <code>overall</code>, <code>equity</code>, <code>fund</code>, <code>fixed_income</code>, <code>macro</code>,
-        <code>sql_native</code>, and <code>sql_python</code>, each as a percentage on all 408 tasks.
-        Optional fields are <code>url</code>, <code>date</code> (<code>YYYY-MM-DD</code>), and
-        <code>status</code> (<code>Submitted</code> until reviewed, or <code>Verified</code>).
       </p>
     </section>
   </main>
@@ -879,8 +856,6 @@
         th.appendChild(lbSortButton(key, label));
         headRow.appendChild(th);
       });
-      headRow.appendChild(lbCell("th", "", "Status"));
-      headRow.appendChild(lbCell("th", "", "Date"));
       headRow.appendChild(lbCell("th", "", "Org"));
       thead.appendChild(headRow);
 
@@ -896,8 +871,6 @@
           const isBest = value !== null && value === max[key];
           tr.appendChild(lbCell("td", isBest ? "best" : "", value === null ? "—" : lbFormat(value)));
         });
-        tr.appendChild(lbCell("td", "", row.status || "Submitted"));
-        tr.appendChild(lbCell("td", "", row.date || "—"));
         const org = document.createElement("td");
         org.className = "org";
         if (row.url) {

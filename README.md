@@ -10,8 +10,6 @@ The leaderboard is rendered from [`data/leaderboard.json`](data/leaderboard.json
   "scaffold": "Agent scaffold",
   "organization": "Organization",
   "url": "https://example.com",
-  "date": "2026-11-05",
-  "status": "Submitted",
   "overall": 0.0,
   "equity": 0.0,
   "fund": 0.0,
@@ -22,4 +20,4 @@ The leaderboard is rendered from [`data/leaderboard.json`](data/leaderboard.json
 }
 ```
 
-Scores are percentages on all 408 tasks. Use `"Verified"` for `status` after the result has been checked.
+Scores are percentages on all 408 tasks. `url` is optional and turns the organization name into a link.
