@@ -1,5 +1,5 @@
-# SpreadsheetBench Homepage
+# BuySideFlow Homepage
 
-Home page of SpreadsheetBench.
+Home page of [BuySideFlow](https://buysideflow.github.io/), a point-in-time benchmark for LLM agents in investment research.
 
-The website template is from Nerfies.
+The leaderboard is rendered from [`data/leaderboard.json`](data/leaderboard.json). Update that file to change ranks, scores, and the summary cards.

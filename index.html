@@ -424,6 +424,33 @@
       color: var(--primary);
     }
 
+    .lb-table th button {
+      background: none;
+      border: 0;
+      padding: 0;
+      font: inherit;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      color: inherit;
+      cursor: pointer;
+    }
+
+    .lb-table th button[aria-sort="descending"]::after,
+    .lb-table th button[aria-sort="ascending"]::after {
+      margin-left: 4px;
+      font-size: 10px;
+    }
+
+    .lb-table th button[aria-sort="descending"]::after { content: "▼"; }
+    .lb-table th button[aria-sort="ascending"]::after { content: "▲"; }
+
+    .lb-loading,
+    .lb-error {
+      color: var(--muted);
+      text-align: center;
+      padding: 28px 0 8px;
+    }
+
     .lb-table td.model,
     .lb-table th.model,
     .lb-table td.scaffold,
@@ -712,161 +739,29 @@
 
       <div class="result-panel">
         <div class="result-card">
-          <div class="result-main">36.8%</div>
-          <div class="result-sub">Top overall · Codex + GPT-5.5</div>
+          <div class="result-main" id="lb-top-overall">—</div>
+          <div class="result-sub" id="lb-top-overall-label">Top overall</div>
         </div>
         <div class="result-card">
-          <div class="result-main">42.1%</div>
-          <div class="result-sub">Best SQL-native · Codex + GPT-5.5</div>
+          <div class="result-main" id="lb-top-sql">—</div>
+          <div class="result-sub" id="lb-top-sql-label">Best SQL-native</div>
         </div>
         <div class="result-card">
-          <div class="result-main">29.9%</div>
-          <div class="result-sub">Best SQL–Python · SWE-agent + GPT-5.5</div>
+          <div class="result-main" id="lb-top-python">—</div>
+          <div class="result-sub" id="lb-top-python-label">Best SQL–Python</div>
         </div>
       </div>
 
       <p class="lb-note">
-        Ranked by overall accuracy. Highlighted cells are column maxima, including the tie at 79.2% on macro.
-        These nine rows are the paper baselines, not external submissions.
+        Rows are loaded from <code>data/leaderboard.json</code> and ranked by overall accuracy.
+        Click a column heading to sort. Highlighted cells are column maxima.
+        These rows are the paper baselines, not external submissions.
       </p>
 
       <div class="task-table-wrap">
-        <table class="lb-table">
-          <thead>
-            <tr>
-              <th>Rank</th>
-              <th class="model">Model</th>
-              <th class="scaffold">Scaffold</th>
-              <th>Overall</th>
-              <th>Equity</th>
-              <th>Fund</th>
-              <th>Fixed income</th>
-              <th>Macro</th>
-              <th>SQL-native</th>
-              <th>SQL–Python</th>
-              <th>Org</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td class="rank rank-1">1</td>
-              <td class="model">GPT-5.5</td>
-              <td class="scaffold">Codex</td>
-              <td class="best">36.8</td>
-              <td>30.7</td>
-              <td class="best">40.8</td>
-              <td class="best">33.3</td>
-              <td>70.8</td>
-              <td class="best">42.1</td>
-              <td>27.9</td>
-              <td class="org">OpenAI</td>
-            </tr>
-            <tr>
-              <td class="rank rank-2">2</td>
-              <td class="model">GPT-5.5</td>
-              <td class="scaffold">SWE-agent</td>
-              <td>35.0</td>
-              <td class="best">34.9</td>
-              <td>32.0</td>
-              <td>29.0</td>
-              <td>75.0</td>
-              <td>38.2</td>
-              <td class="best">29.9</td>
-              <td class="org">OpenAI</td>
-            </tr>
-            <tr>
-              <td class="rank rank-3">3</td>
-              <td class="model">DeepSeek-V4-Flash</td>
-              <td class="scaffold">SWE-agent</td>
-              <td>30.9</td>
-              <td>25.3</td>
-              <td>30.4</td>
-              <td>29.0</td>
-              <td class="best">79.2</td>
-              <td>33.1</td>
-              <td>27.3</td>
-              <td class="org">DeepSeek</td>
-            </tr>
-            <tr>
-              <td class="rank">4</td>
-              <td class="model">Claude-Opus-4.7</td>
-              <td class="scaffold">SWE-agent</td>
-              <td>29.9</td>
-              <td>28.3</td>
-              <td>23.2</td>
-              <td>31.2</td>
-              <td>70.8</td>
-              <td>32.7</td>
-              <td>25.3</td>
-              <td class="org">Anthropic</td>
-            </tr>
-            <tr>
-              <td class="rank">5</td>
-              <td class="model">GPT-5.5</td>
-              <td class="scaffold">Spider-Agent-Lite</td>
-              <td>28.7</td>
-              <td>27.1</td>
-              <td>26.4</td>
-              <td>21.5</td>
-              <td class="best">79.2</td>
-              <td>31.9</td>
-              <td>23.4</td>
-              <td class="org">OpenAI</td>
-            </tr>
-            <tr>
-              <td class="rank">6</td>
-              <td class="model">Claude-Opus-4.7</td>
-              <td class="scaffold">Claude Code</td>
-              <td>24.0</td>
-              <td>22.3</td>
-              <td>18.4</td>
-              <td>23.7</td>
-              <td>66.7</td>
-              <td>25.2</td>
-              <td>22.1</td>
-              <td class="org">Anthropic</td>
-            </tr>
-            <tr>
-              <td class="rank">7</td>
-              <td class="model">DeepSeek-V4-Flash</td>
-              <td class="scaffold">Spider-Agent-Lite</td>
-              <td>22.3</td>
-              <td>19.9</td>
-              <td>14.4</td>
-              <td>24.7</td>
-              <td>70.8</td>
-              <td>23.2</td>
-              <td>20.8</td>
-              <td class="org">DeepSeek</td>
-            </tr>
-            <tr>
-              <td class="rank">8</td>
-              <td class="model">GLM-5.1</td>
-              <td class="scaffold">SWE-agent</td>
-              <td>19.6</td>
-              <td>16.9</td>
-              <td>12.0</td>
-              <td>23.7</td>
-              <td>62.5</td>
-              <td>24.4</td>
-              <td>11.7</td>
-              <td class="org">Zhipu AI</td>
-            </tr>
-            <tr>
-              <td class="rank">9</td>
-              <td class="model">Qwen3.6-Plus</td>
-              <td class="scaffold">SWE-agent</td>
-              <td>16.2</td>
-              <td>13.9</td>
-              <td>13.6</td>
-              <td>17.2</td>
-              <td>41.7</td>
-              <td>19.7</td>
-              <td>10.4</td>
-              <td class="org">Alibaba</td>
-            </tr>
-          </tbody>
-        </table>
+        <div id="leaderboard-board">
+          <p class="lb-loading">Loading leaderboard…</p>
+        </div>
       </div>
 
       <p class="caption">
@@ -876,5 +771,166 @@
   </main>
 
   <footer class="footer"></footer>
+
+  <script>
+    const LB_METRICS = [
+      ["overall", "Overall"],
+      ["equity", "Equity"],
+      ["fund", "Fund"],
+      ["fixed_income", "Fixed income"],
+      ["macro", "Macro"],
+      ["sql_native", "SQL-native"],
+      ["sql_python", "SQL–Python"]
+    ];
+
+    let lbEntries = [];
+    let lbSortKey = "overall";
+    let lbSortDir = -1;
+
+    function lbFormat(value) {
+      return Number(value).toFixed(1);
+    }
+
+    function lbMaxima(rows) {
+      const max = {};
+      LB_METRICS.forEach(([key]) => {
+        max[key] = Math.max(...rows.map((row) => Number(row[key])));
+      });
+      return max;
+    }
+
+    function lbIsMetric(key) {
+      return LB_METRICS.some(([metric]) => metric === key);
+    }
+
+    function lbSorted(rows) {
+      return rows.slice().sort((a, b) => {
+        const delta = lbIsMetric(lbSortKey)
+          ? (Number(a[lbSortKey]) - Number(b[lbSortKey])) * lbSortDir
+          : String(a[lbSortKey]).localeCompare(String(b[lbSortKey])) * lbSortDir;
+        if (delta !== 0) return delta;
+        return String(a.model).localeCompare(String(b.model));
+      });
+    }
+
+    function lbCell(tag, className, text) {
+      const cell = document.createElement(tag);
+      if (className) cell.className = className;
+      cell.textContent = text;
+      return cell;
+    }
+
+    function lbBestRow(rows, key) {
+      return rows.slice().sort((a, b) => Number(b[key]) - Number(a[key]) || String(a.model).localeCompare(String(b.model)))[0];
+    }
+
+    function lbFillSummary(rows) {
+      const overall = lbBestRow(rows, "overall");
+      const sql = lbBestRow(rows, "sql_native");
+      const python = lbBestRow(rows, "sql_python");
+      document.getElementById("lb-top-overall").textContent = lbFormat(overall.overall) + "%";
+      document.getElementById("lb-top-overall-label").textContent = "Top overall · " + overall.scaffold + " + " + overall.model;
+      document.getElementById("lb-top-sql").textContent = lbFormat(sql.sql_native) + "%";
+      document.getElementById("lb-top-sql-label").textContent = "Best SQL-native · " + sql.scaffold + " + " + sql.model;
+      document.getElementById("lb-top-python").textContent = lbFormat(python.sql_python) + "%";
+      document.getElementById("lb-top-python-label").textContent = "Best SQL–Python · " + python.scaffold + " + " + python.model;
+    }
+
+    function lbRender() {
+      const board = document.getElementById("leaderboard-board");
+      const rows = lbSorted(lbEntries);
+      const max = lbMaxima(lbEntries);
+      const overallOrder = lbEntries.slice().sort((a, b) => Number(b.overall) - Number(a.overall) || String(a.model).localeCompare(String(b.model)));
+      const overallRank = new Map(overallOrder.map((row, index) => [row, index + 1]));
+
+      const table = document.createElement("table");
+      table.className = "lb-table";
+      const thead = document.createElement("thead");
+      const headRow = document.createElement("tr");
+      headRow.appendChild(lbCell("th", "", "Rank"));
+
+      [["model", "Model", "model"], ["scaffold", "Scaffold", "scaffold"]].forEach(([key, label, className]) => {
+        const th = document.createElement("th");
+        th.className = className;
+        th.appendChild(lbSortButton(key, label));
+        headRow.appendChild(th);
+      });
+
+      LB_METRICS.forEach(([key, label]) => {
+        const th = document.createElement("th");
+        th.appendChild(lbSortButton(key, label));
+        headRow.appendChild(th);
+      });
+      headRow.appendChild(lbCell("th", "", "Org"));
+      thead.appendChild(headRow);
+
+      const tbody = document.createElement("tbody");
+      rows.forEach((row) => {
+        const tr = document.createElement("tr");
+        const rank = overallRank.get(row);
+        tr.appendChild(lbCell("td", "rank" + (rank <= 3 ? " rank-" + rank : ""), String(rank)));
+        tr.appendChild(lbCell("td", "model", row.model));
+        tr.appendChild(lbCell("td", "scaffold", row.scaffold));
+        LB_METRICS.forEach(([key]) => {
+          const isBest = Number(row[key]) === max[key];
+          tr.appendChild(lbCell("td", isBest ? "best" : "", lbFormat(row[key])));
+        });
+        const org = document.createElement("td");
+        org.className = "org";
+        if (row.url) {
+          const link = document.createElement("a");
+          link.href = row.url;
+          link.target = "_blank";
+          link.rel = "noopener noreferrer";
+          link.textContent = row.organization;
+          org.appendChild(link);
+        } else {
+          org.textContent = row.organization;
+        }
+        tr.appendChild(org);
+        tbody.appendChild(tr);
+      });
+
+      table.append(thead, tbody);
+      board.replaceChildren(table);
+    }
+
+    function lbSortButton(key, label) {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.textContent = label;
+      button.setAttribute("aria-sort", key === lbSortKey ? (lbSortDir < 0 ? "descending" : "ascending") : "none");
+      button.addEventListener("click", () => {
+        if (lbSortKey === key) lbSortDir *= -1;
+        else {
+          lbSortKey = key;
+          lbSortDir = lbIsMetric(key) ? -1 : 1;
+        }
+        lbRender();
+      });
+      return button;
+    }
+
+    async function lbLoad() {
+      const board = document.getElementById("leaderboard-board");
+      try {
+        const response = await fetch("data/leaderboard.json?v=" + Date.now(), { cache: "no-store" });
+        if (!response.ok) throw new Error("HTTP " + response.status);
+        const data = await response.json();
+        if (!Array.isArray(data) || data.length === 0) throw new Error("Empty leaderboard");
+        lbEntries = data;
+        lbFillSummary(data);
+        lbRender();
+      } catch (error) {
+        console.error(error);
+        const message = document.createElement("p");
+        message.className = "lb-error";
+        message.textContent = "Unable to load the leaderboard.";
+        board.replaceChildren(message);
+      }
+    }
+
+    lbLoad();
+  </script>
 </body>
 </html>
