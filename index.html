@@ -385,14 +385,11 @@
       font-size: 16px;
     }
 
-    .lb-note {
-      background: var(--soft-blue);
-      border: 1px solid #d7e6ff;
-      border-radius: 14px;
-      padding: 14px 16px;
-      color: #3d4d66;
-      font-size: 14px;
-      margin: 16px 0 8px;
+    .submit-title {
+      margin-top: 28px;
+      margin-bottom: 10px;
+      color: var(--primary);
+      font-size: 20px;
     }
 
     .lb-table {
@@ -731,10 +728,10 @@
       </div>
 
       <p class="lb-intro">
-        Full-match result accuracy on all 408 tasks. Each row is one paper baseline:
-        the agent scaffold paired with the model. Overall is the percentage of tasks
+        Full-match result accuracy on all 408 tasks. Overall is the percentage of tasks
         whose executed artifact matches the reference. The other columns split that
-        accuracy by asset domain and by reference workflow.
+        accuracy by asset domain and by reference workflow. New results are added by
+        appending an entry to the leaderboard file; the page ranks them automatically.
       </p>
 
       <div class="result-panel">
@@ -752,12 +749,6 @@
         </div>
       </div>
 
-      <p class="lb-note">
-        Rows are loaded from <code>data/leaderboard.json</code> and ranked by overall accuracy.
-        Click a column heading to sort. Highlighted cells are column maxima.
-        These rows are the paper baselines, not external submissions.
-      </p>
-
       <div class="task-table-wrap">
         <div id="leaderboard-board">
           <p class="lb-loading">Loading leaderboard…</p>
@@ -766,6 +757,21 @@
 
       <p class="caption">
         Result accuracy (%) overall, by asset domain (166 / 125 / 93 / 24), and by reference workflow (254 / 154). Overall pools all 408 tasks.
+      </p>
+
+      <h3 class="submit-title">Submit a result</h3>
+      <p>
+        Open a pull request on
+        <a href="https://github.com/buysideflow/buysideflow.github.io" target="_blank" rel="noopener noreferrer">buysideflow/buysideflow.github.io</a>
+        that appends one object to <code>data/leaderboard.json</code>. Do not set <code>rank</code>.
+        The page sorts by <code>overall</code> and recomputes the order.
+      </p>
+      <p>
+        Include <code>model</code>, <code>scaffold</code>, <code>organization</code>, and the seven scores
+        <code>overall</code>, <code>equity</code>, <code>fund</code>, <code>fixed_income</code>, <code>macro</code>,
+        <code>sql_native</code>, and <code>sql_python</code>, each as a percentage on all 408 tasks.
+        Optional fields are <code>url</code>, <code>date</code> (<code>YYYY-MM-DD</code>), and
+        <code>status</code> (<code>Submitted</code> until reviewed, or <code>Verified</code>).
       </p>
     </section>
   </main>
@@ -787,6 +793,12 @@
     let lbSortKey = "overall";
     let lbSortDir = -1;
 
+    function lbNumber(value) {
+      if (value === null || value === undefined || value === "") return null;
+      const number = Number(value);
+      return Number.isFinite(number) ? number : null;
+    }
+
     function lbFormat(value) {
       return Number(value).toFixed(1);
     }
@@ -794,7 +806,8 @@
     function lbMaxima(rows) {
       const max = {};
       LB_METRICS.forEach(([key]) => {
-        max[key] = Math.max(...rows.map((row) => Number(row[key])));
+        const values = rows.map((row) => lbNumber(row[key])).filter((value) => value !== null);
+        max[key] = values.length ? Math.max(...values) : null;
       });
       return max;
     }
@@ -805,9 +818,14 @@
 
     function lbSorted(rows) {
       return rows.slice().sort((a, b) => {
+        const left = lbIsMetric(lbSortKey) ? lbNumber(a[lbSortKey]) : a[lbSortKey];
+        const right = lbIsMetric(lbSortKey) ? lbNumber(b[lbSortKey]) : b[lbSortKey];
+        if (left === null && right === null) return String(a.model).localeCompare(String(b.model));
+        if (left === null) return 1;
+        if (right === null) return -1;
         const delta = lbIsMetric(lbSortKey)
-          ? (Number(a[lbSortKey]) - Number(b[lbSortKey])) * lbSortDir
-          : String(a[lbSortKey]).localeCompare(String(b[lbSortKey])) * lbSortDir;
+          ? (left - right) * lbSortDir
+          : String(left).localeCompare(String(right)) * lbSortDir;
         if (delta !== 0) return delta;
         return String(a.model).localeCompare(String(b.model));
       });
@@ -861,6 +879,8 @@
         th.appendChild(lbSortButton(key, label));
         headRow.appendChild(th);
       });
+      headRow.appendChild(lbCell("th", "", "Status"));
+      headRow.appendChild(lbCell("th", "", "Date"));
       headRow.appendChild(lbCell("th", "", "Org"));
       thead.appendChild(headRow);
 
@@ -872,9 +892,12 @@
         tr.appendChild(lbCell("td", "model", row.model));
         tr.appendChild(lbCell("td", "scaffold", row.scaffold));
         LB_METRICS.forEach(([key]) => {
-          const isBest = Number(row[key]) === max[key];
-          tr.appendChild(lbCell("td", isBest ? "best" : "", lbFormat(row[key])));
+          const value = lbNumber(row[key]);
+          const isBest = value !== null && value === max[key];
+          tr.appendChild(lbCell("td", isBest ? "best" : "", value === null ? "—" : lbFormat(value)));
         });
+        tr.appendChild(lbCell("td", "", row.status || "Submitted"));
+        tr.appendChild(lbCell("td", "", row.date || "—"));
         const org = document.createElement("td");
         org.className = "org";
         if (row.url) {

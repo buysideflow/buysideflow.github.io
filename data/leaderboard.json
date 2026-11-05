@@ -1,6 +1,5 @@
 [
   {
-    "rank": 1,
     "model": "GPT-5.5",
     "scaffold": "Codex",
     "organization": "OpenAI",
@@ -10,10 +9,10 @@
     "fixed_income": 33.3,
     "macro": 70.8,
     "sql_native": 42.1,
-    "sql_python": 27.9
+    "sql_python": 27.9,
+    "status": "Paper"
   },
   {
-    "rank": 2,
     "model": "GPT-5.5",
     "scaffold": "SWE-agent",
     "organization": "OpenAI",
@@ -23,10 +22,10 @@
     "fixed_income": 29.0,
     "macro": 75.0,
     "sql_native": 38.2,
-    "sql_python": 29.9
+    "sql_python": 29.9,
+    "status": "Paper"
   },
   {
-    "rank": 3,
     "model": "DeepSeek-V4-Flash",
     "scaffold": "SWE-agent",
     "organization": "DeepSeek",
@@ -36,10 +35,10 @@
     "fixed_income": 29.0,
     "macro": 79.2,
     "sql_native": 33.1,
-    "sql_python": 27.3
+    "sql_python": 27.3,
+    "status": "Paper"
   },
   {
-    "rank": 4,
     "model": "Claude-Opus-4.7",
     "scaffold": "SWE-agent",
     "organization": "Anthropic",
@@ -49,10 +48,10 @@
     "fixed_income": 31.2,
     "macro": 70.8,
     "sql_native": 32.7,
-    "sql_python": 25.3
+    "sql_python": 25.3,
+    "status": "Paper"
   },
   {
-    "rank": 5,
     "model": "GPT-5.5",
     "scaffold": "Spider-Agent-Lite",
     "organization": "OpenAI",
@@ -62,10 +61,10 @@
     "fixed_income": 21.5,
     "macro": 79.2,
     "sql_native": 31.9,
-    "sql_python": 23.4
+    "sql_python": 23.4,
+    "status": "Paper"
   },
   {
-    "rank": 6,
     "model": "Claude-Opus-4.7",
     "scaffold": "Claude Code",
     "organization": "Anthropic",
@@ -75,10 +74,10 @@
     "fixed_income": 23.7,
     "macro": 66.7,
     "sql_native": 25.2,
-    "sql_python": 22.1
+    "sql_python": 22.1,
+    "status": "Paper"
   },
   {
-    "rank": 7,
     "model": "DeepSeek-V4-Flash",
     "scaffold": "Spider-Agent-Lite",
     "organization": "DeepSeek",
@@ -88,10 +87,10 @@
     "fixed_income": 24.7,
     "macro": 70.8,
     "sql_native": 23.2,
-    "sql_python": 20.8
+    "sql_python": 20.8,
+    "status": "Paper"
   },
   {
-    "rank": 8,
     "model": "GLM-5.1",
     "scaffold": "SWE-agent",
     "organization": "Zhipu AI",
@@ -101,10 +100,10 @@
     "fixed_income": 23.7,
     "macro": 62.5,
     "sql_native": 24.4,
-    "sql_python": 11.7
+    "sql_python": 11.7,
+    "status": "Paper"
   },
   {
-    "rank": 9,
     "model": "Qwen3.6-Plus",
     "scaffold": "SWE-agent",
     "organization": "Alibaba",
@@ -114,6 +113,7 @@
     "fixed_income": 17.2,
     "macro": 41.7,
     "sql_native": 19.7,
-    "sql_python": 10.4
+    "sql_python": 10.4,
+    "status": "Paper"
   }
 ]
