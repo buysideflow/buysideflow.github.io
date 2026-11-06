@@ -29,6 +29,7 @@
 
     html {
       scroll-behavior: smooth;
+      scroll-padding-top: 140px;
     }
 
     body {
@@ -324,6 +325,11 @@
       margin-bottom: 0;
     }
 
+    .comparison-table { min-width: 880px; }
+    .comparison-table th, .comparison-table td { white-space: normal; text-align: left; vertical-align: top; font-size: 14px; }
+    .comparison-table th:first-child, .comparison-table td:first-child { min-width: 130px; }
+    .audit-note { margin-top: 20px; }
+
     .comparison-img {
       width: 100%;
       border-radius: 14px;
@@ -535,6 +541,7 @@
         <a href="#comparison">Comparison</a>
         <a href="#evaluation">Evaluation</a>
         <a href="#leaderboard">Leaderboard</a>
+        <a href="#access">Access</a>
       </nav>
     </div>
   </header>
@@ -622,8 +629,8 @@
         <div class="feature">
           <h3>Controlled Financial Data</h3>
           <p>
-            The benchmark runs against a fixed licensed financial database snapshot with end-to-end
-            hashing for auditability.
+            The benchmark runs against a fixed licensed financial database snapshot identified as
+            Gildata_20260430_v1. Agents must select the task-appropriate historical records.
           </p>
         </div>
       </div>
@@ -670,19 +677,26 @@
 
       <p>
         BuySideFlow differs from existing text-to-SQL, financial-agent, and executable-analysis
-        benchmarks by treating point-in-time admissibility as an explicit evaluation concern.
+        benchmarks through a separate expert audit of temporal requirements in agent-written workflows.
+        Related benchmarks also implement temporal controls, as summarized below.
       </p>
 
-      <img
-        class="comparison-img"
-        src="static/images/table1-comparison.jpg"
-        alt="Comparison of BuySideFlow with existing benchmark families"
-      />
-
-      <p class="caption">
-        Table 2: Closest benchmark families along six axes. PIT indicates whether historical
-        admissibility is treated as an explicit evaluation concern.
-      </p>
+      <div class="task-table-wrap" tabindex="0" role="region" aria-label="Benchmark comparison, scroll horizontally on smaller screens">
+        <table class="task-table comparison-table">
+          <thead><tr><th scope="col">Benchmark</th><th scope="col">Task setting</th><th scope="col">Data and execution</th><th scope="col">Output evaluation</th><th scope="col">Temporal checks</th></tr></thead>
+          <tbody>
+            <tr><th scope="row">BULL</th><td>Financial querying</td><td>Financial databases; generated SQL</td><td>Execution-result accuracy</td><td>NR</td></tr>
+            <tr><th scope="row">Spider 2.0</th><td>Enterprise analytics</td><td>Databases and code projects; SQL/Python/dbt</td><td>Task-specific output checks</td><td>NR</td></tr>
+            <tr><th scope="row">DAB</th><td>Data analysis</td><td>Databases; SQL and Python tools</td><td>Deterministic answer checks</td><td>NR</td></tr>
+            <tr><th scope="row">FinGAIA</th><td>Financial analysis</td><td>Web, files, and Python</td><td>Answer accuracy</td><td>NR</td></tr>
+            <tr><th scope="row">FinSkillBench</th><td>Investment subtasks</td><td>Market/XBRL retrieval; condition-dependent financial tools</td><td>Structured outputs; deterministic checks</td><td>✓ As-of data slices</td></tr>
+            <tr><th scope="row">AlphaQT-Bench</th><td>Factor generation</td><td>Price/volume data; single-turn Python generation</td><td>Reference-output accuracy</td><td>✓ Prefix-causality safety gates functional accuracy</td></tr>
+            <tr><th scope="row">OpenPM</th><td>Portfolio allocation</td><td>Market and vintage data</td><td>Portfolio performance and rule adherence</td><td>✓ Runtime availability audit and certificate</td></tr>
+            <tr><th scope="row">BuySideFlow</th><td>Chinese buy-side research</td><td>Fixed financial database; agent-written SQL or SQL–Python</td><td>Reference checks for tables, figures, and mixed outputs</td><td>✓ Separate expert audit of executed dependencies: cutoffs, historical states, and record versions</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="caption">Adapted from Table 11 of the paper. ✓ indicates a specified temporal control or check; NR means not reported in the cited work, not demonstrated absence.</p>
     </section>
 
     <section class="card" id="evaluation">
@@ -690,18 +704,19 @@
 
       <div class="feature-grid">
         <div class="feature">
-          <h3>Execution + Audit</h3>
+          <h3>Result Checks + Workflow Audit</h3>
           <p>
-            Generated SQL and Python workflows are executed and checked against reference artifacts.
-            Diagnostic flags surface point-in-time risks.
+            Executed outputs are checked against reference artifacts. A separate expert audit reviews
+            task rules, programs, outputs, and execution traces for confirmed workflow errors.
           </p>
         </div>
 
         <div class="feature">
-          <h3>Runtime Leakage Guards</h3>
+          <h3>Static PIT Screening</h3>
           <p>
-            Runtime date functions such as current-date calls are blocked to prevent hidden
-            time leakage.
+            Rule-based screening flags predefined patterns such as runtime-date use, missing temporal
+            guards, and current-state filtering. It does not execute code or block runtime calls;
+            its diagnostic flags remain separate from result scores.
           </p>
         </div>
 
@@ -713,6 +728,23 @@
           </p>
         </div>
       </div>
+      <div class="audit-note">
+        <h3>How result passing is determined</h3>
+        <p>Tables are compared programmatically using task-specific field, unit, precision, and ordering rules. Complete rows and multiplicity are preserved. Flexible-format tasks allow declared aliases, column reordering, and alternative layouts.</p>
+        <p>Images and text use model judges with task-grounded checklists. For mixed outputs, normalized table:image:text weights are 3:2:1. These weighted scores summarize item results; they do not replace the passing criteria. Tables must match, and visual or mixed outputs require all mandatory items to pass and judging to be available. Mandatory visual items require scores of at least 0.999.</p>
+      </div>
+    </section>
+
+    <section class="card" id="pit-audit">
+      <h2>PIT Audit: Scope and Findings</h2>
+      <p>The audit covers 900 submissions: nine configurations on the same 100-task subset spanning all four asset domains. Of the 380 result-pass submissions, 193 have at least one confirmed PIT violation (50.8%). Among 520 result-fail submissions, 345 have a confirmed PIT violation (66.3%).</p>
+      <div class="feature-grid">
+        <div class="feature"><h3>A1 · Temporal-semantic misuse</h3><p>Confusing information availability, business-valid time, and system-recording time, such as treating a report-period end as its disclosure date.</p></div>
+        <div class="feature"><h3>A2 · Current state for history</h3><p>Substituting current classifications, ratings, or status for the historical state required at the research date.</p></div>
+        <div class="feature"><h3>A3 · Faulty historical reconstruction</h3><p>Using the appropriate historical sources and time semantics but incorrectly handling validity intervals, record versions, joins, or duplicate removal.</p></div>
+      </div>
+      <p class="audit-note">The full taxonomy contains 20 error types across seven groups: temporal and condition filtering; table and field interpretation; data analysis and planning; joins; output requirements; agent behavior and context; and execution and SQL dialect. A1–A3 define PIT violations; categories can overlap.</p>
+      <p>Each submission is counted once in the any-PIT rate. These are audit-subset findings, not PIT prevalence estimates for every benchmark run. No confirmed violation does not establish PIT compliance, and result agreement alone does not establish temporal validity.</p>
     </section>
 
     <section class="card" id="leaderboard">
@@ -721,8 +753,8 @@
       </div>
 
       <p class="lb-intro">
-        Full-match result accuracy on all 408 tasks. Score is the percentage of tasks
-        whose executed artifact matches the reference.
+        Result accuracy on all 408 tasks. Score is the percentage of tasks that pass their
+        task-specific result checks. It is not a PIT-compliance score.
       </p>
 
       <div class="result-panel">
@@ -741,6 +773,13 @@
       <p class="caption">
         Result accuracy (%) on all 408 tasks.
       </p>
+    </section>
+    <section class="card" id="access">
+      <h2>Data Access and Reproduction</h2>
+      <p>All evaluations use the fixed licensed Gildata sample Gildata_20260430_v1, containing 110 tables and 4,547 columns. The database maintainer confirms that the data have remained unchanged since 30 April 2026. The sample retains records on both sides of individual research dates; workflows must enforce each task’s temporal requirements.</p>
+      <p>The paper describes a package of 408 tasks, reference programs and answers, and background-knowledge files. Reference materials remain hidden from agents during evaluation. Database access is separate from these benchmark materials: the sample is hosted on Alibaba Cloud, with read-only credentials available by application under the existing license.</p>
+      <p>The licensed database is not an unrestricted public download. The available package does not include the original production-to-sample extraction manifest or complete per-table retention rules. Reproduction uses the identified licensed sample; rebuilding an identical sample requires extraction rules from the maintainer.</p>
+      <p class="result-note">Public paper and dataset download links are not yet available on this page. No credentials or licensed database contents are distributed here.</p>
     </section>
   </main>
 
