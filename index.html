@@ -571,7 +571,7 @@
           Code
         </a>
       
-        <a class="btn btn-outline btn-disabled" href="#">Dataset Coming Soon</a>
+        <a class="btn btn-outline" href="https://huggingface.co/datasets/anonymousconf/BuySideFlow" target="_blank" rel="noopener noreferrer">Dataset · Request Access</a>
       </div>
       
     </section>
@@ -580,7 +580,7 @@
       <h2>Abstract</h2>
 
       <p class="abstract-text">
-        Buy-side investment research is not just “write SQL and run it.” A workflow can execute successfully and still be wrong: it may pull a filing that was not yet public at the research date, rely on a classification revised after the fact, or apply today's security list to a date when it looked different. BuySideFlow is a benchmark of 408 practitioner-derived tasks spanning equities, funds, fixed income, and macroeconomics. Every task runs against the same fixed sample snapshot of a licensed financial database, with 110 tables and 4,547 columns. Reference workflows comprise 254 SQL-native tasks and 154 SQL–Python tasks. Nine agent configurations are evaluated on all 408 tasks. Full-match result accuracy ranges from 16.2% to 36.8%. Among 380 audited submissions that pass the result check, 193 (50.8%) still contain confirmed point-in-time violations, so output agreement alone does not establish temporal validity.
+        Buy-side investment research is not just “write SQL and run it.” A workflow can execute successfully and still be wrong: it may pull a filing that was not yet public at the research date, rely on a classification revised after the fact, or apply today's security list to a date when it looked different. BuySideFlow is a benchmark of 408 practitioner-derived tasks spanning equities, funds, fixed income, and macroeconomics. Every task runs against the same fixed sample snapshot of a licensed financial database. Reference workflows comprise 254 SQL-native tasks and 154 SQL–Python tasks. Nine agent configurations are evaluated on all 408 tasks. Full-match result accuracy ranges from 16.2% to 36.8%. Among 380 audited submissions that pass the result check, 193 (50.8%) still contain confirmed point-in-time violations, so output agreement alone does not establish temporal validity.
       </p>
     </section>
 
@@ -594,8 +594,8 @@
         </div>
 
         <div class="stat-card">
-          <div class="number">110</div>
-          <div class="label">Database Tables</div>
+          <div class="number">91</div>
+          <div class="label">Released Database Tables</div>
         </div>
 
         <div class="stat-card">
@@ -637,39 +637,22 @@
     </section>
 
     <section class="card" id="tasks">
-      <div class="section-title-row">
-        <h2>Task Distribution</h2>
-      </div>
-
+      <h2>Dataset at a Glance</h2>
       <div class="task-table-wrap">
         <table class="task-table">
-          <thead>
-            <tr>
-              <th>Domain</th>
-              <th>Equity</th>
-              <th>Fund</th>
-              <th>Fixed income</th>
-              <th>Macro</th>
-              <th>Total</th>
-            </tr>
-          </thead>
-
+          <thead><tr><th scope="col">Item</th><th scope="col">Count</th></tr></thead>
           <tbody>
-            <tr>
-              <td>Tasks</td>
-              <td>166</td>
-              <td>125</td>
-              <td>93</td>
-              <td>24</td>
-              <td>408</td>
-            </tr>
+            <tr><th scope="row">Tasks</th><td>408</td></tr>
+            <tr><th scope="row">Equity / fund / fixed-income / macro tasks</th><td>166 / 125 / 93 / 24</td></tr>
+            <tr><th scope="row">SQL-native / SQL–Python reference workflows</th><td>254 / 154</td></tr>
+            <tr><th scope="row">CSV / mixed / figure-oriented tasks</th><td>401 / 1 / 6</td></tr>
+            <tr><th scope="row">Released database tables</th><td>91</td></tr>
+            <tr><th scope="row">Database rows</th><td>446,170,760</td></tr>
+            <tr><th scope="row">Compressed Parquet data</th><td>26.03 GB</td></tr>
           </tbody>
         </table>
       </div>
-
-      <p class="caption">
-        Domain counts from the paper. Reference workflows split into 254 SQL-native tasks and 154 SQL–Python tasks.
-      </p>
+      <p class="caption">Workflow labels describe reference implementations, not proof that Python is required. The 91 released tables were identified by a static audit of reference-code dependencies, not runtime access logs. Data downloads require manual approval.</p>
     </section>
 
     <section class="card" id="comparison">
@@ -776,10 +759,10 @@
     </section>
     <section class="card" id="access">
       <h2>Data Access and Reproduction</h2>
-      <p>All evaluations use the fixed licensed Gildata sample Gildata_20260430_v1, containing 110 tables and 4,547 columns. The database maintainer confirms that the data have remained unchanged since 30 April 2026. The sample retains records on both sides of individual research dates; workflows must enforce each task’s temporal requirements.</p>
-      <p>The paper describes a package of 408 tasks, reference programs and answers, and background-knowledge files. Reference materials remain hidden from agents during evaluation. Database access is separate from these benchmark materials: the sample is hosted on Alibaba Cloud, with read-only credentials available by application under the existing license.</p>
+      <p>All evaluations use the fixed licensed Gildata sample Gildata_20260430_v1. The database maintainer confirms that the data have remained unchanged since 30 April 2026. The sample retains records on both sides of individual research dates; workflows must enforce each task’s temporal requirements.</p>
+      <p>The paper describes a package of 408 tasks, reference programs and answers, and background-knowledge files. Reference materials remain hidden from agents during evaluation. Database access is separate from these benchmark materials. The 91 released tables are available as Parquet files on <a href="https://huggingface.co/datasets/anonymousconf/BuySideFlow" target="_blank" rel="noopener noreferrer">Hugging Face</a>, subject to manual approval and the dataset’s access terms.</p>
       <p>The licensed database is not an unrestricted public download. The available package does not include the original production-to-sample extraction manifest or complete per-table retention rules. Reproduction uses the identified licensed sample; rebuilding an identical sample requires extraction rules from the maintainer.</p>
-      <p class="result-note">Public paper and dataset download links are not yet available on this page. No credentials or licensed database contents are distributed here.</p>
+      <p class="result-note">The paper link is not yet available on this page. Dataset downloads require approved access; no database credentials are distributed here.</p>
     </section>
   </main>
 
